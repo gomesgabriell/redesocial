@@ -1,9 +1,9 @@
-
 <?php
 
 require_once __DIR__ . "/../controllers/UsuarioController.php";
 require_once __DIR__ . "/../controllers/PublicacaoController.php";
 require_once __DIR__ . "/../controllers/CurtidaController.php";
+require_once __DIR__ . "/../controllers/LoginController.php";
 
 $rota = $_GET["rota"] ?? "";
 $metodo = $_SERVER["REQUEST_METHOD"];
@@ -27,6 +27,19 @@ switch ($rota) {
             case "DELETE":
                 deleteUsuario($con);
                 break;
+
+            default:
+                http_response_code(405);
+                echo json_encode(["erro" => "Método não permitido"]);
+        }
+        break;
+
+    case "login":
+        if ($metodo === "POST") {
+            loginUsuario($con);
+        } else {
+            http_response_code(405);
+            echo json_encode(["erro" => "Método não permitido"]);
         }
         break;
 
@@ -47,6 +60,10 @@ switch ($rota) {
             case "DELETE":
                 deletePublicacao($con);
                 break;
+
+            default:
+                http_response_code(405);
+                echo json_encode(["erro" => "Método não permitido"]);
         }
         break;
 
@@ -63,13 +80,15 @@ switch ($rota) {
             case "DELETE":
                 deleteCurtida($con);
                 break;
+
+            default:
+                http_response_code(405);
+                echo json_encode(["erro" => "Método não permitido"]);
         }
         break;
 
     default:
         http_response_code(404);
-        echo json_encode([
-            "erro" => "Rota não encontrada"
-        ]);
+        echo json_encode(["erro" => "Rota não encontrada"]);
         break;
 }

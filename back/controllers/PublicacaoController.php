@@ -1,4 +1,3 @@
-
 <?php
 
 require_once __DIR__ . "/../models/PublicacaoModel.php";
@@ -6,9 +5,12 @@ require_once __DIR__ . "/../models/PublicacaoModel.php";
 function createPublicacao($con) {
     $dados = json_decode(file_get_contents("php://input"), true);
 
-    if (empty($dados["usuario_id"]) || empty($dados["conteudo"])) {
+    if (
+        empty($dados["id_usuario"]) ||
+        empty($dados["legenda"])
+    ) {
         http_response_code(400);
-        echo json_encode(["erro" => "Informe o usuário e o conteúdo"]);
+        echo json_encode(["erro" => "Informe o usuário e a legenda"]);
         return;
     }
 
@@ -19,7 +21,7 @@ function createPublicacao($con) {
 }
 
 function readPublicacao($con) {
-    $id = $_GET["id"] ?? null;
+    $id = $_GET["id_publicacao"] ?? null;
 
     $publicacoes = readPublicacaoModel($con, $id);
 
@@ -29,21 +31,24 @@ function readPublicacao($con) {
 function updatePublicacao($con) {
     $dados = json_decode(file_get_contents("php://input"), true);
 
-    if (empty($dados["id"]) || empty($dados["conteudo"])) {
+    if (
+        empty($dados["id_publicacao"]) ||
+        empty($dados["legenda"])
+    ) {
         http_response_code(400);
-        echo json_encode(["erro" => "Informe o ID e o conteúdo"]);
+        echo json_encode(["erro" => "Informe o ID e a legenda"]);
         return;
     }
 
     if (updatePublicacaoModel($con, $dados)) {
-        echo json_encode(["mensagem" => "Publicação atualizada"]);
+        echo json_encode(["mensagem" => "Publicação atualizada com sucesso"]);
     }
 }
 
 function deletePublicacao($con) {
     $dados = json_decode(file_get_contents("php://input"), true);
 
-    $id = $dados["id"] ?? $_GET["id"] ?? null;
+    $id = $dados["id_publicacao"] ?? $_GET["id_publicacao"] ?? null;
 
     if (!$id) {
         http_response_code(400);
@@ -52,6 +57,6 @@ function deletePublicacao($con) {
     }
 
     if (deletePublicacaoModel($con, $id)) {
-        echo json_encode(["mensagem" => "Publicação excluída"]);
+        echo json_encode(["mensagem" => "Publicação excluída com sucesso"]);
     }
 }

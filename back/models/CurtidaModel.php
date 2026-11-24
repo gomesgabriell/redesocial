@@ -1,43 +1,47 @@
-
 <?php
 
 function createCurtidaModel($con, $dados) {
-    $sql = "INSERT INTO curtidas (usuario_id, publicacao_id)
-            VALUES (:usuario_id, :publicacao_id)";
+    $sql = "INSERT INTO curtidas
+            (id_usuario, id_publicacao)
+            VALUES (:id_usuario, :id_publicacao)";
 
     $stmt = $con->prepare($sql);
 
     return $stmt->execute([
-        ":usuario_id" => $dados["usuario_id"],
-        ":publicacao_id" => $dados["publicacao_id"]
+        ":id_usuario" => $dados["id_usuario"],
+        ":id_publicacao" => $dados["id_publicacao"]
     ]);
 }
 
-function readCurtidaModel($con, $publicacao_id = null) {
-    if ($publicacao_id) {
+function readCurtidaModel($con, $id_publicacao = null) {
+    if ($id_publicacao) {
         $sql = "SELECT * FROM curtidas
-                WHERE publicacao_id = :publicacao_id";
+                WHERE id_publicacao = :id_publicacao";
 
         $stmt = $con->prepare($sql);
-        $stmt->execute([":publicacao_id" => $publicacao_id]);
+
+        $stmt->execute([
+            ":id_publicacao" => $id_publicacao
+        ]);
 
         return $stmt->fetchAll();
     }
 
-    $sql = "SELECT * FROM curtidas ORDER BY id DESC";
+    $sql = "SELECT * FROM curtidas
+            ORDER BY data_curtida DESC";
 
     return $con->query($sql)->fetchAll();
 }
 
 function deleteCurtidaModel($con, $dados) {
     $sql = "DELETE FROM curtidas
-            WHERE usuario_id = :usuario_id
-            AND publicacao_id = :publicacao_id";
+            WHERE id_usuario = :id_usuario
+            AND id_publicacao = :id_publicacao";
 
     $stmt = $con->prepare($sql);
 
     return $stmt->execute([
-        ":usuario_id" => $dados["usuario_id"],
-        ":publicacao_id" => $dados["publicacao_id"]
+        ":id_usuario" => $dados["id_usuario"],
+        ":id_publicacao" => $dados["id_publicacao"]
     ]);
 }

@@ -1,4 +1,3 @@
-
 <?php
 
 require_once __DIR__ . "/../models/CurtidaModel.php";
@@ -7,8 +6,8 @@ function createCurtida($con) {
     $dados = json_decode(file_get_contents("php://input"), true);
 
     if (
-        empty($dados["usuario_id"]) ||
-        empty($dados["publicacao_id"])
+        empty($dados["id_usuario"]) ||
+        empty($dados["id_publicacao"])
     ) {
         http_response_code(400);
         echo json_encode(["erro" => "Informe o usuário e a publicação"]);
@@ -17,14 +16,14 @@ function createCurtida($con) {
 
     if (createCurtidaModel($con, $dados)) {
         http_response_code(201);
-        echo json_encode(["mensagem" => "Curtida adicionada"]);
+        echo json_encode(["mensagem" => "Curtida adicionada com sucesso"]);
     }
 }
 
 function readCurtida($con) {
-    $publicacao_id = $_GET["publicacao_id"] ?? null;
+    $id = $_GET["id_publicacao"] ?? null;
 
-    $curtidas = readCurtidaModel($con, $publicacao_id);
+    $curtidas = readCurtidaModel($con, $id);
 
     echo json_encode($curtidas);
 }
@@ -33,8 +32,8 @@ function deleteCurtida($con) {
     $dados = json_decode(file_get_contents("php://input"), true);
 
     if (
-        empty($dados["usuario_id"]) ||
-        empty($dados["publicacao_id"])
+        empty($dados["id_usuario"]) ||
+        empty($dados["id_publicacao"])
     ) {
         http_response_code(400);
         echo json_encode(["erro" => "Informe o usuário e a publicação"]);
@@ -42,6 +41,6 @@ function deleteCurtida($con) {
     }
 
     if (deleteCurtidaModel($con, $dados)) {
-        echo json_encode(["mensagem" => "Curtida removida"]);
+        echo json_encode(["mensagem" => "Curtida removida com sucesso"]);
     }
 }

@@ -1,45 +1,54 @@
-
 <?php
 
 function createPublicacaoModel($con, $dados) {
-    $sql = "INSERT INTO publicacoes (usuario_id, conteudo)
-            VALUES (:usuario_id, :conteudo)";
+    $sql = "INSERT INTO publicacoes
+            (id_usuario, legenda, imagem_url)
+            VALUES (:id_usuario, :legenda, :imagem_url)";
 
     $stmt = $con->prepare($sql);
 
     return $stmt->execute([
-        ":usuario_id" => $dados["usuario_id"],
-        ":conteudo" => $dados["conteudo"]
+        ":id_usuario" => $dados["id_usuario"],
+        ":legenda" => $dados["legenda"],
+        ":imagem_url" => $dados["imagem_url"] ?? null
     ]);
 }
 
 function readPublicacaoModel($con, $id = null) {
     if ($id) {
-        $sql = "SELECT * FROM publicacoes WHERE id = :id";
+        $sql = "SELECT * FROM publicacoes
+                WHERE id_publicacao = :id";
+
         $stmt = $con->prepare($sql);
         $stmt->execute([":id" => $id]);
+
         return $stmt->fetch();
     }
 
-    $sql = "SELECT * FROM publicacoes ORDER BY id DESC";
+    $sql = "SELECT * FROM publicacoes
+            ORDER BY data_publicacao DESC";
+
     return $con->query($sql)->fetchAll();
 }
 
 function updatePublicacaoModel($con, $dados) {
     $sql = "UPDATE publicacoes
-            SET conteudo = :conteudo
-            WHERE id = :id";
+            SET legenda = :legenda,
+                imagem_url = :imagem_url
+            WHERE id_publicacao = :id_publicacao";
 
     $stmt = $con->prepare($sql);
 
     return $stmt->execute([
-        ":conteudo" => $dados["conteudo"],
-        ":id" => $dados["id"]
+        ":legenda" => $dados["legenda"],
+        ":imagem_url" => $dados["imagem_url"] ?? null,
+        ":id_publicacao" => $dados["id_publicacao"]
     ]);
 }
 
 function deletePublicacaoModel($con, $id) {
-    $sql = "DELETE FROM publicacoes WHERE id = :id";
+    $sql = "DELETE FROM publicacoes
+            WHERE id_publicacao = :id";
 
     $stmt = $con->prepare($sql);
 

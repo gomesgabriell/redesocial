@@ -1,8 +1,7 @@
-
 <?php
 
 $host = "localhost";
-$banco = "redesocial";
+$banco = "instagram_db";
 $usuario = "root";
 $senha = "";
 
